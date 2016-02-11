@@ -1,0 +1,23 @@
+{
+  "name": "asr-fsm-navigation",
+  "version": "0.0.0",
+  "description": "Use a fsm finite state machine definition to navigate around an abstract-state-router application using dispatch events",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TehShrike/asr-fsm-navigation.git"
+  },
+  "keywords": [
+    "fsm",
+    "abstract-state-router"
+  ],
+  "author": "TehShrike",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/TehShrike/asr-fsm-navigation/issues"
+  },
+  "homepage": "https://github.com/TehShrike/asr-fsm-navigation#readme"
+}
