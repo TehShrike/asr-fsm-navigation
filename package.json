@@ -2,9 +2,12 @@
   "name": "asr-fsm-navigation",
   "version": "0.0.0",
   "description": "Use a fsm finite state machine definition to navigate around an abstract-state-router application using dispatch events",
-  "main": "index.js",
+  "main": "es5.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run build:test && node test-build.js",
+    "test:browser": "npm run build:test && opn test.html",
+    "build:test": "browserify test/*.js -o test-build.js -d",
+    "build": "browserify . --standalone=\"asr-fsm-navigation\" -o es5.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +22,26 @@
   "bugs": {
     "url": "https://github.com/TehShrike/asr-fsm-navigation/issues"
   },
-  "homepage": "https://github.com/TehShrike/asr-fsm-navigation#readme"
+  "homepage": "https://github.com/TehShrike/asr-fsm-navigation#readme",
+  "devDependencies": {
+    "abstract-state-router": "5.10.0",
+    "asr-active-state-watcher": "1.0.0",
+    "babel-preset-es2015": "6.5.0",
+    "babelify": "7.2.0",
+    "opn-cli": "3.1.0",
+    "tape": "4.4.0",
+    "tape-catch": "1.0.4"
+  },
+  "jsnext:main": "index.js",
+  "browser": "index.js",
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": "es2015"
+        }
+      ]
+    ]
+  }
 }
