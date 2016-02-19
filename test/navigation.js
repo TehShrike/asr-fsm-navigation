@@ -110,3 +110,52 @@ test('initial use case', t => {
 		t.end()
 	}
 })
+
+test('query parameters specified when navigating to states', t => {
+	t.timeoutAfter(1000)
+
+	const testState = makeTestStates(t)
+	const stateWatcher = makeAsrStateWatcher(testState.stateRouter)
+	const startFsmNavigation = beginWatchingRouter(testState.stateRouter, stateWatcher)
+
+	t.plan(2)
+
+	var stop = startFsmNavigation({
+		'parent1': {
+			GO_TO_PARENT2_CHILD1: {
+				name: 'parent2.child1',
+				parameters: {
+					from: 'parent1'
+				}
+			}
+		},
+		'parent2.child1': {
+			GO_TO_PARENT1: 'parent1',
+			GO_TO_PARENT1_CHILD1: 'parent1.child1'
+		}
+	}, { inherit: false })
+
+	testState.stateRouter.once('stateChangeEnd', () => {
+		testState.stateRouter.once('stateChangeEnd', secondStep)
+
+		testState.emitters.parent1child1.fire('dispatch', 'GO_TO_PARENT2_CHILD1')
+	})
+
+	testState.stateRouter.go('parent1.child1')
+
+	function secondStep(state, parameters) {
+		t.equal(parameters.from, 'parent1')
+
+		testState.stateRouter.once('stateChangeEnd', thirdStep)
+
+		testState.emitters.parent2.fire('dispatch', 'GO_TO_PARENT1')
+	}
+
+	function thirdStep(state, parameters) {
+		t.notOk(parameters.from)
+
+		stop()
+
+		t.end()
+	}
+})

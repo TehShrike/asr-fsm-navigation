@@ -10,7 +10,7 @@ module.exports = function beginWatchingRouter(stateRouter, stateWatcher) {
 		currentStateName = state.name
 	})
 
-	return function startFsmNavigation(fsm) {
+	return function startFsmNavigation(fsm, options = { inherit: true }) {
 		var definedStates = Object.keys(fsm)
 		function dispatchListener(actionType) {
 			const currentMostAppropriateState = findMostAppropriateState(definedStates, currentStateName)
@@ -19,8 +19,16 @@ module.exports = function beginWatchingRouter(stateRouter, stateWatcher) {
 				const destinationState = fsm[currentMostAppropriateState][actionType]
 
 				if (destinationState) {
-					const mostSpecificChildState = specificStateHistory[destinationState] || destinationState
-					stateRouter.go(mostSpecificChildState, {}, { inherit: true })
+					var destinationStateName = destinationState
+					var parameters = {}
+
+					if (typeof destinationState !== 'string') {
+						destinationStateName = destinationState.name
+						parameters = destinationState.parameters
+					}
+
+					const mostSpecificChildState = specificStateHistory[destinationStateName] || destinationStateName
+					stateRouter.go(mostSpecificChildState, parameters, options)
 				}
 			} else {
 				console.warn('The state router is at state ' + currentStateName + ' and there is no matching fsm')
