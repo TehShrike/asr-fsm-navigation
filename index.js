@@ -41,8 +41,10 @@ module.exports = function beginWatchingRouter(stateRouter, stateWatcher) {
 		})
 
 		const removeDetachListener = stateWatcher.addDomApiDetachListener(ractive => {
-			ractive.off('dispatch', dispatchListener)
-			ractive.off('dispatchInput', dispatchListener)
+			if (ractive) {
+				ractive.off('dispatch', dispatchListener)
+				ractive.off('dispatchInput', dispatchListener)
+			}
 		})
 
 		return function stop() {
